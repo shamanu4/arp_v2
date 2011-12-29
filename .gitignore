@@ -1,0 +1,7 @@
+*.pyc
+*.*~
+.project
+.pydevproject
+.settings/*
+src/settings_local.py
+
