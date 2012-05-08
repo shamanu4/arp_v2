@@ -32,12 +32,12 @@ from dhcpd import conf_default as conf
 from dhcpd import logging
 from dhcpd import sql
 
-import libpydhcpserver.dhcp_network
+from libpydhcpserver import dhcp_network
 from libpydhcpserver.type_rfc import (
  ipToList, ipsToList,
- intToList, intsToList,
- longToList, longsToList,
- strToList, strToPaddedList,
+ #intToList, intsToList,
+ longToList, #longsToList,
+ strToList, #strToPaddedList,
 )
 
 _dhcp_servers = [] #: A collection of all instantiated DHCP servers; this should only ever be one element long.
@@ -56,7 +56,7 @@ def _logInvalidValue(name, value, subnet, serial):
      'value': value,
     })
     
-class _DHCPServer(libpydhcpserver.dhcp_network.DHCPNetwork):
+class _DHCPServer(dhcp_network.DHCPNetwork):
     """
     The handler that responds to all received DHCP requests.
     """
@@ -92,8 +92,8 @@ class _DHCPServer(libpydhcpserver.dhcp_network.DHCPNetwork):
         self._stats_lock = threading.Lock()
         self._dhcp_assignments = {}
         self._ignored_addresses = []
-        
-        libpydhcpserver.dhcp_network.DHCPNetwork.__init__(
+
+        dhcp_network.DHCPNetwork.__init__(
          self, server_address, server_port, client_port, pxe_port
         )
         
@@ -277,6 +277,7 @@ class _DHCPServer(libpydhcpserver.dhcp_network.DHCPNetwork):
             
         start_time = time.time()
         mac = None
+        #noinspection PyBroadException
         try:
             mac = packet.getHardwareAddress()
         except:
@@ -721,6 +722,7 @@ class _DHCPServer(libpydhcpserver.dhcp_network.DHCPNetwork):
         self._stats_lock.release()
         
     def _sendDHCPPacket(self, packet, address, response_type, mac, client_ip):
+        #noinspection PyUnresolvedReferences
         """
         Sends the given packet to the right destination based on its properties.
         
@@ -747,7 +749,7 @@ class _DHCPServer(libpydhcpserver.dhcp_network.DHCPNetwork):
         @rtype: int
         @return: The number of bytes transmitted.
         """
-        ip = port = None
+        #ip = port = None
         if address[0] not in ('255.255.255.255', '0.0.0.0', ''): #Unicast.
             giaddr = packet.getOption("giaddr")
             if giaddr and not giaddr == [0,0,0,0]: #Relayed request.

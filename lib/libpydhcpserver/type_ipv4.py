@@ -108,7 +108,7 @@ class ipv4(object):
             self._numlistToString()
         else:
             raise TypeError('Expected str, list, or long; got %(type)s' % {
-             'type': ip_type,
+             'type': type(data),
             })
             
     def _longToNumlist(self):

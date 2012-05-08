@@ -33,8 +33,8 @@ Legal
 ################################################################################
 import threading
 
-from dhcpd import conf_default as conf
-from dhcpd import logging
+import conf_default as conf
+import logging
 
 class _SQLBroker(object):
     """
@@ -60,7 +60,7 @@ class _SQLBroker(object):
         Sets up common attributes of broker objects.
         
         @type concurrency_limit: int
-        @param concurrent_limit: The number of concurrent database hits to
+        @param concurrency_limit: The number of concurrent database hits to
             permit.
         """
         self._resource_lock = threading.BoundedSemaphore(concurrency_limit)
@@ -150,7 +150,8 @@ class _DB20Broker(_SQLBroker):
     _module = None #: The db2api-compliant module to use.
     _connection_details = None #: The module-specific details needed to connect to a database.
     _query_mac = None #: The string used to look up a MAC's binding.
-    
+
+    #noinspection PyUnboundLocalVariable
     def _lookupMAC(self, mac):
         """
         Queries the database for the given MAC address and returns the IP and
@@ -173,7 +174,6 @@ class _DB20Broker(_SQLBroker):
         try:
             db = self._getConnection()
             cur = db.cursor()
-            
             cur.execute(self._query_mac, (mac,))
             result = cur.fetchone()
             if result:
@@ -206,13 +206,14 @@ class _PoolingBroker(_DB20Broker):
         L{_connection_details} must be defined before calling this function.
         
         @type concurrency_limit: int
-        @param concurrent_limit: The number of concurrent database hits to
+        @param concurrency_limit: The number of concurrent database hits to
             permit.
         """
         _DB20Broker._setupBroker(self, concurrency_limit)
 
         if conf.USE_POOL:
             try:
+                #noinspection PyUnresolvedReferences
                 import eventlet.db_pool
                 self._eventlet__db_pool = eventlet.db_pool
             except ImportError:
@@ -374,7 +375,7 @@ class _SQLite(_NonPoolingBroker):
 SQL_BROKER = None #: The class of the SQL engine to use.
 SQL_MODULE = None #: The module of the SQL engine to use.
 if conf.DATABASE_ENGINE == 'MySQL':
-    import MySQLdb as SQL_MODULE
+#    import MySQLdb as SQL_MODULE
     SQL_BROKER = _MySQL
 #elif conf.DATABASE_ENGINE == 'PostgreSQL':
 #    import psycopg2 as SQL_MODULE

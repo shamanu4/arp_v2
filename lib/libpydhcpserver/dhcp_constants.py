@@ -82,6 +82,8 @@ DHCP_FIELDS_SPECS = {
  "identifier": (0, 2, 1),
  "none": (0, 0, 1),
 }
+
+#noinspection PyStatementEffect
 """
 Provides information about how to validate each basic DHCP option type.
 
@@ -94,7 +96,6 @@ following algorithm:
     else:
         only C{fixed_length} is considered
 """
-
 DHCP_FIELDS_TYPES = {
  'op': "byte",
  'htype': "byte",
@@ -286,12 +287,13 @@ DHCP_OPTIONS_TYPES = {
  252: "Reserved", 253: "Reserved", 254: "Reserved",
  255: "none",
 }
+
+#noinspection PyStatementEffect
 """
 Maps DHCP option-numbers to DHCP fields specs.
 
 All values derived from http://www.iana.org/assignments/bootp-dhcp-parameters
 """
-
 DHCP_OPTIONS = {
  'pad': 0,
  # Vendor Extension

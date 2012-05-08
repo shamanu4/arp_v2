@@ -61,12 +61,12 @@ WEB_ENABLED=None
 WEB_IP=None
 WEB_PORT=None
 WEB_RELOAD_KEY=None
-init=None
+#init=None # method
 intToList=None
 intsToList=None
 ipToList=None
 ipsToList=None
-loadDHCPPacket=None
+#loadDHCPPacket=None # method
 longToList=None
 longsToList=None
 rfc1035_plus=None
@@ -85,6 +85,7 @@ rfc5678_140=None
 strToList=None
 strToPaddedList=None
 
+#noinspection PyStatementEffect
 """
   end of headers
 """
@@ -264,8 +265,6 @@ def loadDHCPPacket(packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor
     #rule-writing guide.
     #
     ##### PARAMETERS #####
-    print "DEBUG:"
-    print "packet: %s;;\n mac: %s;;\n client_ip: %s;;\n relay_ip: %s;;\n subnet: %s;;\n serial: %s;;\n pxe: %s;;\n vendor: %s;;\n" % (packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor)
     #mac is a human-readable MAC string, lower-case, separated by colons.
     #client_ip is a quadruple of octets: (192, 168, 1, 1)
     #relay_ip is either None or an address as a quadruple of octets,
@@ -281,5 +280,8 @@ def loadDHCPPacket(packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor
     #    [(enterprise_number:int, data:string)] and
     #    [(enterprise_number:int, [(subopt_code:byte, data:string)])],
     #    respectively. Any unset options are presented as None.
+    print "DEBUG:"
+    print "packet: %s;;\n mac: %s;;\n client_ip: %s;;\n relay_ip: %s;;\n subnet: %s;;\n serial: %s;;\n pxe: %s;;\n vendor: %s;;\n" % (packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor)
+    
     return True
     

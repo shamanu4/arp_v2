@@ -25,7 +25,7 @@ Legal
  (C) Neil Tallim, 2010 <red.hamsterx@gmail.com>
  (C) Mathieu Ignacio, 2008 <mignacio@april.org>
 """
-import operator
+#import operator
 from struct import unpack
 from struct import pack
 import warnings
@@ -33,7 +33,7 @@ import warnings
 from dhcp_constants import *
 from type_hwmac import hwmac
 from type_ipv4 import ipv4
-from type_strlist import strlist
+#from type_strlist import strlist
 from type_rfc import *
 
 class DHCPPacket(object):
@@ -73,8 +73,9 @@ class DHCPPacket(object):
         
         #Extract extended options from the payload.
         while position < end_position:
+            #noinspection PySimplifyBooleanCheck
             if self._packet_data[position] == 0: #Pad option; skip byte.
-                opt_first = position + 1
+                #opt_first = position + 1
                 position += 1
             elif self._packet_data[position] == 255: #End option; stop processing.
                 break
@@ -103,7 +104,8 @@ class DHCPPacket(object):
                 
         #Cut the packet data down to 240 bytes.
         self._packet_data = self._packet_data[:236] + MAGIC_COOKIE
-        
+
+    #noinspection PyUnusedLocal
     def encodePacket(self):
         """
         Assembles all data into a single, C-char-packed struct.
@@ -168,7 +170,7 @@ class DHCPPacket(object):
         else:
             self._options_data[name] = value
             return True
-        return False
+        #return False
         
     def deleteOption(self, name):
         """
@@ -203,14 +205,14 @@ class DHCPPacket(object):
         request-list. Useful to force poorly designed clients to perform
         specific tasks.
         
-        @type name: basestring|int
-        @param name: The option's name or numeric value.
+        @type option: basestring|int
+        @param option: The option's name or numeric value.
         @type value: list|tuple
         @param value: The bytes to assign to this option.
         
         @raise ValueError: The specified option does not exist.
         """
-        name = id = None
+        #name = id = None
         if type(option) == int: #Translate int to string.
             name = DHCP_OPTIONS_REVERSE.get(option)
             id = option
@@ -441,7 +443,7 @@ class DHCPPacket(object):
                 payload = opt_124[1:1 + payload_size]
                 opt_124 = opt_124[1 + payload_size:]
                 
-                data.append(enterprise_number, payload)
+                data.extend([enterprise_number, payload])
             opt_124 = data
             
         if opt_125:
@@ -459,9 +461,9 @@ class DHCPPacket(object):
                     subopt_size = ord(payload[1])
                     subpayload = payload[2:2 + subopt_size]
                     payload = payload[2 + subopt_size:]
-                    subdata.append(subopt, subpayload)
+                    subdata.extend([subopt, subpayload])
                     
-                data.append(enterprise_number, subdata)
+                data.extend([enterprise_number, subdata])
             opt_125 = data
             
         self.deleteOption("vendor_specific_information")
@@ -469,7 +471,7 @@ class DHCPPacket(object):
         self.deleteOption("vendor_class")
         self.deleteOption("vendor_specific")
         
-        return (opt_43, opt_60, opt_124, opt_125)
+        return opt_43, opt_60, opt_124, opt_125
         
     def _transformBase(self):
         """
@@ -561,6 +563,7 @@ class DHCPPacket(object):
         return hwmac(full_hw).str()
     
     def getVlanNum(self):
+        #noinspection PyBroadException
         try:
             relay_agent = self.getOption("relay_agent")
         except:
@@ -652,7 +655,7 @@ class DHCPPacket(object):
         output.append("#Options fields")
         for opt in self._options_data.keys():
             data = self._options_data[opt]
-            result = None
+            #result = None
             optnum  = DHCP_OPTIONS[opt]
             if opt == 'dhcp_message_type':
                 result = DHCP_FIELDS_NAMES['dhcp_message_type'][data[0]]

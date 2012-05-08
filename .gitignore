@@ -1,6 +1,7 @@
 *.pyc
 *.*~
 .project
+.idea/
 .pydevproject
 .settings/*
 src/settings_local.py

@@ -33,9 +33,10 @@ import threading
 import time
 
 try:
-	from urlparse import parse_qs
-except:
-	from cgi import parse_qs
+    from urlparse import parse_qs
+except ImportError:
+    #noinspection PyDeprecation
+    from cgi import parse_qs
 
 from dhcpd import conf_default as conf
 from dhcpd import dhcp

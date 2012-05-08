@@ -26,6 +26,7 @@ Legal
  (C) Neil Tallim, 2011 <red.hamsterx@gmail.com>
 """
 
+#noinspection PyStatementEffect
 """
  headers for aptana built-in  syntax checker
 """
@@ -110,6 +111,7 @@ rfc5678_140=None
 strToList=None
 strToPaddedList=None
 
+#noinspection PyStatementEffect
 """
   end of headers
 """

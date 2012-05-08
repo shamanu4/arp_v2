@@ -38,7 +38,8 @@ if not conf.DEBUG: #Suppress all unnecessary prints.
     sys.stdout = sys.stderr = open('/dev/null', 'w')
 else:
     sys.stdout = sys.stderr
-    
+
+#noinspection PyUnusedLocal,PyBroadException
 def _quitHandler(signum, frame):
     """
     Cleanly shuts down this daemon upon receipt of a SIGTERM.
@@ -59,7 +60,8 @@ def _quitHandler(signum, frame):
     logging.logToDisk()
     
     exit(0)
-    
+
+#noinspection PyUnusedLocal
 def _logHandler(signum, frame):
     """
     Flushes DHCP cache and writes log to disk upon receipt of a SIGHUP.
@@ -91,6 +93,7 @@ def run():
     dhcp_thread.start()
     
     #Record PID.
+    #noinspection PyBroadException
     try:
         pidfile = open(conf.PID_FILE, 'w')
         pidfile.write(str(os.getpid()) + '\n')
@@ -100,6 +103,7 @@ def run():
         logging.writeLog("Unable to write pidfile: %(file)s" % {'file': conf.PID_FILE,})
         
     #Touch logfile.
+    #noinspection PyBroadException
     try:
         open(conf.LOG_FILE, 'a').close()
         os.chown(conf.LOG_FILE, conf.UID, conf.GID)

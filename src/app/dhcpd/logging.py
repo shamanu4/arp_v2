@@ -128,7 +128,7 @@ def logToDisk():
     @return: True if the logfile was written.
     """
     try:
-        log_file = None
+        #log_file = None
         if conf.LOG_FILE_TIMESTAMP:
             log_file = open(conf.LOG_FILE + time.strftime(".%Y%m%d%H%M%S"), 'w')
         else:

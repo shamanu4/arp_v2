@@ -203,7 +203,7 @@ class DHCPNetwork(object):
         """
         pass
         
-    def _handleDHCPRelease(self, packet, source_address):
+    def _handleDHCPRelease(self, packet, source_address, pxe):
         """
         Processes a RELEASE packet.
         

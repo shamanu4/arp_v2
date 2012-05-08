@@ -86,7 +86,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'middleware.CurrentUserMiddleware',
+    #'middleware.CurrentUserMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -113,14 +113,14 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.admin',
-    'dhcpd',
-    # 'django_extensions',          # optional, neede for development only
+    'app.dhcpd',
+    # 'django_extensions',          # optional, needed for development only
 )
 
 PROGRAM_VERSION = 'v0.00.001'
 
 try:
-    from settings_local import *
+    from local_settings import *
 except ImportError:
     pass
 
