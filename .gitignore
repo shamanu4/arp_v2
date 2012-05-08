@@ -4,5 +4,9 @@
 .idea/
 .pydevproject
 .settings/*
+*.log
+*.pot
+
+src/local_settings.py
 src/settings_local.py
 
