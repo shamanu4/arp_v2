@@ -18,13 +18,21 @@ def host_type():
 def install_prerequirements():
     try:
         run('git --version')
-    except:
+    except Exception:
         run('sudo yum install git')
+    try:
+        run('mysql --version')
+    except Exception:
+        run('sudo yum install mysql')
+    try:
+        run('gcc --version')
+    except Exception:
+        run('sudo yum install gcc')
 
 def install_requirements():
     with cd(env.project):
         with prefix('source %s/bin/activate' % env.env):
-            run('pip install -r src/requirements.txt')
+            run('pip install -r requirements.txt')
 
 def init_project():
     """
@@ -42,5 +50,9 @@ def init_project():
         run('virtualenv %s' % (env.env,))
     install_requirements()
 
+def pull(branch='master'):
+    with cd(env.project):
+        with prefix('source %s/bin/activate' % env.env):
+            run('git pull origin %s' % branch)
 
 
