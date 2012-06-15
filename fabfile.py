@@ -16,18 +16,12 @@ def host_type():
     run('uname -s')
 
 def install_prerequirements():
-    try:
-        run('git --version')
-    except Exception:
-        run('sudo yum install git')
-    try:
-        run('mysql --version')
-    except Exception:
-        run('sudo yum install mysql')
-    try:
-        run('gcc --version')
-    except Exception:
-        run('sudo yum install gcc')
+    sudo('yum install gcc')
+    sudo('yum install git')
+    sudo('yum install mysql-devel')
+    sudo('yum install python-devel')
+    sudo('yum install libxml2-devel')
+    sudo('yum install libxslt-devel')
 
 def install_requirements():
     with cd(env.project):
