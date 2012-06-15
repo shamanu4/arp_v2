@@ -1,11 +1,14 @@
 *.pyc
-*.*~
-.project
-.idea/
-.pydevproject
-.settings/*
 *.log
 *.pot
+*.iml
+*.*~
+
+.project
+.idea/
+.venv/
+.pydevproject
+.settings/*
 
 src/local_settings.py
 src/settings_local.py

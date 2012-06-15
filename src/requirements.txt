@@ -1,0 +1,5 @@
+fabric
+django
+MySQL-python
+BeautifulSoup
+lxml
