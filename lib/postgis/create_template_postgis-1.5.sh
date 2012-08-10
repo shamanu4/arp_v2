@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
-#POSTGIS_SQL_PATH=`pg_config --sharedir`/contrib/postgis-1.5
 POSTGIS_SQL_PATH=/usr/pgsql-9.0/share/contrib/postgis-1.5
-PSQL_ADV_LIB_PATH=/usr/pgsql-9.0/lib/
-PSQL_LIB_PATH=`pg_config --libdir`
-
-cd -- "PSQL_ADV_LIB_PATH"
-find -type f -exec ln --symbolic -- "$PSQL_ADV_LIB_PATH"/{} "$PSQL_LIB_PATH"/{} \;
+POSTGRES_LIB_PATH=/usr/pgsql-9.0/lib/
 
 createdb -E UTF8 template_postgis # Create the template spatial database.
 createlang -d template_postgis plpgsql # Adding PLPGSQL language support.

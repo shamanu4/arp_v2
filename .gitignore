@@ -3,6 +3,7 @@
 *.pot
 *.iml
 *.*~
+*.b
 
 .project
 .idea/

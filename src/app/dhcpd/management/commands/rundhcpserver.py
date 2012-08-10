@@ -2,9 +2,7 @@
 
 from django.core.management.base import BaseCommand
 class Command(BaseCommand):
-    help = "This doesn't do anything yet"
+    help = "Run builtin dhcp server"
     def handle(self, *args, **options):
         from dhcpd import main
         main.run()
-        print 'greatcmd was called'
-        # other fancy code here

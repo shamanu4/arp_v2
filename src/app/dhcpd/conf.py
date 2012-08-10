@@ -145,7 +145,7 @@ ALLOW_LOCAL_DHCP = True
 #If False, relayed DHCP requests will be ignored.
 ALLOW_DHCP_RELAYS = True
 #A list of all IPs allowed to relay requests; if empty, all are allowed.
-ALLOWED_DHCP_RELAYS = ['192.168.66.1','176.98.68.1']
+ALLOWED_DHCP_RELAYS = ['192.168.66.1','176.98.68.1','176.98.95.1']
 
 #If True, any unknown MACs will be NAKed instead of ignored. If you may have
 #more than one DHCP server serving a single LAN, this is NOT something you
@@ -254,7 +254,9 @@ EMAIL_TIMEOUT = 600
 def init():
     #Perform any required imports or setup operations within this function.
     pass
-    
+
+PKT_CAPT=[]
+
 def loadDHCPPacket(packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor):
     #This is a custom function, called before each packet is sent, that
     #allows you to tweak the options attached to a DHCP response.
@@ -282,6 +284,6 @@ def loadDHCPPacket(packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor
     #    respectively. Any unset options are presented as None.
     print "DEBUG:"
     print "packet: %s;;\n mac: %s;;\n client_ip: %s;;\n relay_ip: %s;;\n subnet: %s;;\n serial: %s;;\n pxe: %s;;\n vendor: %s;;\n" % (packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor)
-    
+    PKT_CAPT.append((packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor))
     return True
     

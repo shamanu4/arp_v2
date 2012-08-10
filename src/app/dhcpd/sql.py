@@ -375,7 +375,7 @@ class _SQLite(_NonPoolingBroker):
 SQL_BROKER = None #: The class of the SQL engine to use.
 SQL_MODULE = None #: The module of the SQL engine to use.
 if conf.DATABASE_ENGINE == 'MySQL':
-#    import MySQLdb as SQL_MODULE
+    import MySQLdb as SQL_MODULE
     SQL_BROKER = _MySQL
 #elif conf.DATABASE_ENGINE == 'PostgreSQL':
 #    import psycopg2 as SQL_MODULE

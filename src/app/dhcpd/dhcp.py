@@ -190,7 +190,7 @@ class _DHCPServer(dhcp_network.DHCPNetwork):
         """
         if not self._evaluateRelay(packet):
             return
-            
+
         start_time = time.time()
         mac = packet.getHardwareAddress()
         vlan = packet.getVlanNum()

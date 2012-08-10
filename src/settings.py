@@ -5,6 +5,7 @@ def rel(*x):
     return os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
 
 sys.path.insert(0, rel('..', 'lib'))
+sys.path.insert(0, rel('.',))
 sys.path.insert(0, rel('..',))
 sys.path.insert(0, rel('app',))
 

@@ -1,5 +1,8 @@
 fabric
 django
-MySQL-python
+# MySQL-python
 BeautifulSoup
 lxml
+psycopg2
+factory_boy
+mock
