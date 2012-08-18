@@ -107,14 +107,11 @@ def backup_db(db):
     run('sudo -u postgres pg_dump %s > %s.%s.sql' % (db,db,timestamp) )
     env.warn_only=False
 
-def create_test_db(db,user,password):
-    env.warn_only=True
+def create_db(db,user,password):
     run('sudo -u postgres psql -c "DROP DATABASE IF EXISTS %s;"' % (db,) )
     run('sudo -u postgres psql -c "DROP USER IF EXISTS %s;"' % (user,) )
     run('sudo -u postgres psql -c "CREATE USER %s WITH PASSWORD \'%s\';"' % (user,password) )
-    run('sudo -u postgres psql -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c bgwriter_lru_maxpages=0 \
-            -c "CREATE DATABASE %s OWNER %s TEMPLATE=template_postgis;"' % (db,user))
-    env.warn_only=False
+    run('sudo -u postgres psql -c "CREATE DATABASE %s OWNER %s TEMPLATE=template_postgis;"' % (db,user))
 
 def setup_db():
     from src.local_settings import DATABASES
@@ -123,21 +120,6 @@ def setup_db():
         if db['ENGINE'] == 'django.contrib.gis.db.backends.postgis':
             backup_db(db['NAME'])
             create_db(db['NAME'],db['USER'],db['PASSWORD'])
-
-def create_db(db,user,password):
-    env.warn_only=True
-    run('sudo -u postgres psql -c "DROP DATABASE IF EXISTS %s;"' % (db,) )
-    run('sudo -u postgres psql -c "DROP USER IF EXISTS %s;"' % (user,) )
-    run('sudo -u postgres psql -c "CREATE USER %s WITH PASSWORD \'%s\';"' % (user,password) )
-    run('sudo -u postgres psql -c "CREATE DATABASE %s OWNER %s TEMPLATE=template_postgis;"' % (db,user))
-    env.warn_only=False
-
-def setup_test_db():
-    from src.local_settings import DATABASES
-    for i in DATABASES:
-        db = DATABASES[i]
-        if db['ENGINE'] == 'django.contrib.gis.db.backends.postgis':
-            create_test_db("test_%s" % db['NAME'],db['USER'],db['PASSWORD'])
 
 def syncdb():
     with cd(env.project):

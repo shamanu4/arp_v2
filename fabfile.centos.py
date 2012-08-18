@@ -16,7 +16,7 @@ env.repo='git://github.com/shamanu4/arp_v2.git'
 # /etc/sudoers setup:
 # add these lines to allow execute required commands without password
 
-Cmnd_Alias FABRIC = /usr/bin/apt-get, /usr/bin/tee, /usr/bin/service, /usr/bin/psql, /usr/bin/createdb, /usr/bin/createlang
+Cmnd_Alias FABRIC = /usr/bin/yum, /usr/bin/tee, /sbin/chkconfig, /sbin/service, /usr/bin/psql
 fabric		ALL=(ALL)	NOPASSWD: FABRIC
 
 """
@@ -37,31 +37,43 @@ def host_type():
     run('uname -s')
 
 def install_postgis():
-    env.warn_only=True
-    run("sudo -u postgres createdb -E UTF8 -U postgres template_postgis")
-    run("sudo -u postgres createlang -d template_postgis plpgsql;")
-    run("sudo -u postgres psql -U postgres -d template_postgis -c \"CREATE EXTENSION hstore;\" ")
-    env.warn_only=False
-    run("sudo -u postgres psql -U postgres -d template_postgis -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql")
-    run("sudo -u postgres psql -U postgres -d template_postgis -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql")
-    run("sudo -u postgres psql -U postgres -d template_postgis -c \"select postgis_lib_version();\" ")
-    run("sudo -u postgres psql -U postgres -d template_postgis -c \"GRANT ALL ON geometry_columns TO PUBLIC;\" ")
-    run("sudo -u postgres psql -U postgres -d template_postgis -c \"GRANT ALL ON spatial_ref_sys TO PUBLIC;\" ")
-    run("sudo -u postgres psql -U postgres -d template_postgis -c \"GRANT ALL ON geography_columns TO PUBLIC;\" ")
-    run("echo 'Done!'")
+    repo_descr="""
+[pgdg90]
+name=PostgreSQL 9.0 $releasever - $basearch
+baseurl=http://yum.pgrpms.org/9.0/redhat/rhel-$releasever-$basearch
+enabled=1
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+[pgdg90-source]
+name=PostgreSQL 9.0 $releasever - $basearch - Source
+failovermethod=priority
+baseurl=http://yum.pgrpms.org/srpms/9.0/redhat/rhel-$releasever-$basearch
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG
+    """
+    run("echo '%s' | sudo tee /etc/yum.repos.d/pgrpms9.repo" % repo_descr)
+    run("sudo yum install postgis90")
+    run("sudo -u postgres bash lib/postgis/create_template_postgis-1.5.sh")
 
 def install_postgres():
-    run('sudo apt-get install postgresql-9.1')
-    run('sudo apt-get install postgresql-server-dev-9.1')
-    run('sudo apt-get install postgresql-9.1-postgis')
-    run('sudo apt-get install python-psycopg2')
-    run('sudo service postgresql start')
+    run('sudo yum install postgresql90-devel')
+    run('sudo yum install postgresql-devel')        # postgresql90-devel has not pg_config
+    run('sudo yum install postgresql90-server')
+    run('sudo yum install postgresql-python')
+    run('sudo chkconfig --add postgresql-9.0')
+    run('sudo service postgresql-9.0 initdb')
+    run('sudo chkconfig postgresql-9.0 on')
+    run('sudo service postgresql-9.0 start')
 
 def install_prerequirements():
-    run('sudo apt-get install git')
-    run('sudo apt-get install gcc')
-    run('sudo apt-get install python-dev')
-    run('sudo apt-get install python-virtualenv')
+    run('sudo yum install wget')
+    run('sudo yum install gcc')
+    run('sudo yum install git')
+    #run('sudo yum install mysql-devel')
+    run('sudo yum install python-devel')
+    run('sudo yum install libxml2-devel')
+    run('sudo yum install libxslt-devel')
+    run('sudo yum install binutils')
     install_postgres()
     install_postgis()
 
@@ -107,14 +119,11 @@ def backup_db(db):
     run('sudo -u postgres pg_dump %s > %s.%s.sql' % (db,db,timestamp) )
     env.warn_only=False
 
-def create_test_db(db,user,password):
-    env.warn_only=True
+def create_db(db,user,password):
     run('sudo -u postgres psql -c "DROP DATABASE IF EXISTS %s;"' % (db,) )
     run('sudo -u postgres psql -c "DROP USER IF EXISTS %s;"' % (user,) )
     run('sudo -u postgres psql -c "CREATE USER %s WITH PASSWORD \'%s\';"' % (user,password) )
-    run('sudo -u postgres psql -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c bgwriter_lru_maxpages=0 \
-            -c "CREATE DATABASE %s OWNER %s TEMPLATE=template_postgis;"' % (db,user))
-    env.warn_only=False
+    run('sudo -u postgres psql -c "CREATE DATABASE %s OWNER %s TEMPLATE=template_postgis;"' % (db,user))
 
 def setup_db():
     from src.local_settings import DATABASES
@@ -123,21 +132,6 @@ def setup_db():
         if db['ENGINE'] == 'django.contrib.gis.db.backends.postgis':
             backup_db(db['NAME'])
             create_db(db['NAME'],db['USER'],db['PASSWORD'])
-
-def create_db(db,user,password):
-    env.warn_only=True
-    run('sudo -u postgres psql -c "DROP DATABASE IF EXISTS %s;"' % (db,) )
-    run('sudo -u postgres psql -c "DROP USER IF EXISTS %s;"' % (user,) )
-    run('sudo -u postgres psql -c "CREATE USER %s WITH PASSWORD \'%s\';"' % (user,password) )
-    run('sudo -u postgres psql -c "CREATE DATABASE %s OWNER %s TEMPLATE=template_postgis;"' % (db,user))
-    env.warn_only=False
-
-def setup_test_db():
-    from src.local_settings import DATABASES
-    for i in DATABASES:
-        db = DATABASES[i]
-        if db['ENGINE'] == 'django.contrib.gis.db.backends.postgis':
-            create_test_db("test_%s" % db['NAME'],db['USER'],db['PASSWORD'])
 
 def syncdb():
     with cd(env.project):
