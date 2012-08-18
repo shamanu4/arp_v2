@@ -282,8 +282,7 @@ def loadDHCPPacket(packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor
     #    [(enterprise_number:int, data:string)] and
     #    [(enterprise_number:int, [(subopt_code:byte, data:string)])],
     #    respectively. Any unset options are presented as None.
-    print "DEBUG:"
-    print "packet: %s;;\n mac: %s;;\n client_ip: %s;;\n relay_ip: %s;;\n subnet: %s;;\n serial: %s;;\n pxe: %s;;\n vendor: %s;;\n" % (packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor)
-    PKT_CAPT.append((packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor))
+    #print "DEBUG:"
+    #print "packet: %s;;\n mac: %s;;\n client_ip: %s;;\n relay_ip: %s;;\n subnet: %s;;\n serial: %s;;\n pxe: %s;;\n vendor: %s;;\n" % (packet, mac, client_ip, relay_ip, subnet, serial, pxe, vendor)
     return True
     

@@ -188,6 +188,11 @@ class _DHCPServer(dhcp_network.DHCPNetwork):
         @type pxe: bool
         @param pxe: True if the packet was received on the PXE port.
         """
+        #assert False
+        from conf import PKT_CAPT
+
+        PKT_CAPT.append((packet, source_address, pxe))
+
         if not self._evaluateRelay(packet):
             return
 

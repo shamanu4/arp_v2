@@ -564,14 +564,25 @@ class DHCPPacket(object):
     
     def getVlanNum(self):
         #noinspection PyBroadException
+        vlan = None
         try:
             relay_agent = self.getOption("relay_agent")
         except:
-            return 0
-        vlan = relay_agent[4]*256+relay_agent[5]
+            return vlan
+        if relay_agent:
+            vlan = relay_agent[4]*256+relay_agent[5]
         return vlan
 
-        
+    def getRelay(self):
+        relay = None
+        try:
+            relay = self.getOption("router")
+        except:
+            pass
+        return relay
+
+
+
     def getRequestedOptions(self):
         """
         Returns the options requested by the client from which this packet

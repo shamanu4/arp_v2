@@ -6,3 +6,5 @@ lxml
 psycopg2
 factory_boy
 mock
+coverage
+south

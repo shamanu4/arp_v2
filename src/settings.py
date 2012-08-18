@@ -1,4 +1,5 @@
-# Django settings for src project.
+# -*- encoding: utf-8 -*-
+
 import os, sys
 
 def rel(*x):
@@ -125,3 +126,5 @@ try:
 except ImportError:
     pass
 
+if 'test' in sys.argv or 'testserver' in sys.argv:
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}

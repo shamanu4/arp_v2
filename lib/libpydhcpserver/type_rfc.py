@@ -87,7 +87,7 @@ def longToList(l):
     
     @type l: int
     @param l: The long value to convert.
-    
+    f
     @rtype: list
     @return: The converted bytes.
     """

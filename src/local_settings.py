@@ -10,3 +10,6 @@ DATABASES = {
         'PASSWORD': 'geo13arpv2ifvzMlBnno'
         }
 }
+
+#POSTGIS_SQL_PATH="/usr/pgsql-9.0/share/contrib/postgis-1.5"
+#TEST_RUNNER='django.contrib.gis.tests.run_tests'
